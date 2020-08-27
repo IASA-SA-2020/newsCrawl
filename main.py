@@ -148,7 +148,7 @@ if __name__ == '__main__':
     while True:
         pool = multiprocessing.Pool(processes=processNo)
         for _ in tqdm(
-                pool.imap_unordered(processOneNews, [(id, x) for x in range(i, i + processNo * batch)]),
+                pool.imap_unordered(processOneNews, [(i, x) for x in range(i, i + processNo * batch)]),
                 total=processNo * batch, desc="Batch %d - %d" % (i, i + processNo * batch - 1)):
             pass
         pool.close()

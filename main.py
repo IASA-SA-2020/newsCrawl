@@ -16,7 +16,8 @@ host = 'localhost'
 def connectDB():
     while True:
         try:
-            return pymongo.MongoClient(host, 27017)
+            conn = pymongo.MongoClient(host, 27017)
+            return conn
             break
         except:
             pass
@@ -146,8 +147,9 @@ if __name__ == '__main__':
         i = 1
     while True:
         pool = multiprocessing.Pool(processes=processNo)
-        for _ in tqdm(pool.imap_unordered(processOneNews, [(oid, x) for x in range(i, i + processNo * batch)]),
-                      total=processNo * batch, desc="Batch %d - %d" % (i, i + processNo * batch - 1)):
+        for _ in tqdm(
+                pool.imap_unordered(processOneNews, [(id, x) for x in range(i, i + processNo * batch)]),
+                total=processNo * batch, desc="Batch %d - %d" % (i, i + processNo * batch - 1)):
             pass
         pool.close()
         pool.join()

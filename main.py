@@ -52,8 +52,8 @@ def getRaw(oid, aid):
             summary = json.loads(summaryResponse.text)
         except:
             summary = None
-        if newsResponse.status_code != 200 or summaryResponse.status_code != 200:
-            return False, None, None
+        if newsResponse.status_code != 200:
+            continue
         return True, newsResponseText, summary
 
 

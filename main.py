@@ -10,6 +10,7 @@ sectionName = {'정치': 'politics', '경제': 'economy', '사회': 'society', '
                '오피니언': 'opinion'}
 processNo = 8
 batch = 200
+host = 'localhost'
 
 
 def getNewsURL(oid, aid):
@@ -117,7 +118,7 @@ def getNews(newsDB, categoryDB, oid, aid):
 
 def processOneNews(op):
     oid, i = op
-    connection = pymongo.MongoClient('localhost', 27017)
+    connection = pymongo.MongoClient(host, 27017)
     newsDB = connection["newsDB"]
     categoryDB = connection["newsCategory"]
     getNews(newsDB, categoryDB, oid, i)
@@ -127,7 +128,7 @@ if __name__ == '__main__':
     multiprocessing.freeze_support()
     oid = int(input())
 
-    connection = pymongo.MongoClient('localhost', 27017)
+    connection = pymongo.MongoClient(host, 27017)
     newsDB = connection["newsDB"]
     metadataCollection = newsDB['metadata']
     try:

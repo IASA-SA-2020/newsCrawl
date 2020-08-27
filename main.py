@@ -13,6 +13,15 @@ batch = 200
 host = 'localhost'
 
 
+def connectDB():
+    while True:
+        try:
+            return pymongo.MongoClient(host, 27017)
+            break
+        except:
+            pass
+
+
 def getNewsURL(oid, aid):
     return 'https://news.naver.com/main/read.nhn?oid=%03d&aid=%010d' % (oid, aid), \
            'https://tts.news.naver.com/article/%03d/%010d/summary' % (oid, aid)
@@ -118,7 +127,7 @@ def getNews(newsDB, categoryDB, oid, aid):
 
 def processOneNews(op):
     oid, i = op
-    connection = pymongo.MongoClient(host, 27017)
+    connection = connectDB()
     newsDB = connection["newsDB"]
     categoryDB = connection["newsCategory"]
     getNews(newsDB, categoryDB, oid, i)
@@ -128,7 +137,7 @@ if __name__ == '__main__':
     multiprocessing.freeze_support()
     oid = int(input())
 
-    connection = pymongo.MongoClient(host, 27017)
+    connection = connectDB()
     newsDB = connection["newsDB"]
     metadataCollection = newsDB['metadata']
     try:

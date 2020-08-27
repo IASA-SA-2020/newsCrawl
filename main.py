@@ -47,7 +47,7 @@ def getRaw(oid, aid):
             newsResponseText = newsResponse.text.replace('<br />', '\n').replace('<br>', '\n')
             summaryResponse = requests.get(summaryURL)
         except:
-            pass
+            continue
         try:
             summary = json.loads(summaryResponse.text)
         except:

@@ -8,8 +8,8 @@ from tqdm import tqdm
 
 sectionName = {'정치': 'politics', '경제': 'economy', '사회': 'society', '생활': 'live', '세계': 'world', 'IT': 'it',
                '오피니언': 'opinion'}
-processNo = 8
-batch = 200
+processNo = 1
+batch = 1
 host = 'localhost'
 
 
@@ -83,6 +83,7 @@ def crawlNews(oid, aid):
         newsText = newsText.replace('\n', ' ')
         newsText = newsText.replace('  ', ' ')
         newsText = newsText.strip()
+        newsText = newsText.encode("utf-8").decode('utf-8')
 
         newsTitle = newsSoup.find(id="articleTitle").get_text().strip()
 

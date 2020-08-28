@@ -17,8 +17,9 @@ def connectDB():
     while True:
         try:
             conn = pymongo.MongoClient(host, 27017)
-            return conn
-            break
+            newsDB = conn["newsDB"]
+            categoryDB = conn["newsCategory"]
+            return newsDB, categoryDB
         except:
             pass
 
@@ -107,30 +108,38 @@ def getNews(newsDB, categoryDB, oid, aid):
         return
     newsTitle, newsText, summaryText, category, publishTime, editedTime = args
     newsCollection = newsDB["%03d" % oid]
-    if newsCollection.find_one({"newsId": aid}):
-        return
-    newsCollection.insert_one({
-        'newsId': aid,
-        'title': newsTitle,
-        'body': newsText,
-        'summary': summaryText,
-        'category': category,
-        'publishTime': publishTime,
-        'editedTime': editedTime
-    })
+    while True:
+        try:
+            if newsCollection.find_one({"newsId": aid}):
+                return
+            newsCollection.insert_one({
+                'newsId': aid,
+                'title': newsTitle,
+                'body': newsText,
+                'summary': summaryText,
+                'category': category,
+                'publishTime': publishTime,
+                'editedTime': editedTime
+            })
+            break
+        except:
+            pass
     for i in category:
-        categoryCollection = categoryDB[i]
-        categoryCollection.insert_one({
-            'oid': oid,
-            'aid': aid
-        })
+        while True:
+            try:
+                categoryCollection = categoryDB[i]
+                categoryCollection.insert_one({
+                    'oid': oid,
+                    'aid': aid
+                })
+                break
+            except:
+                pass
 
 
 def processOneNews(op):
     oid, i = op
-    connection = connectDB()
-    newsDB = connection["newsDB"]
-    categoryDB = connection["newsCategory"]
+    newsDB, categoryDB = connectDB()
     getNews(newsDB, categoryDB, oid, i)
 
 
@@ -138,8 +147,7 @@ if __name__ == '__main__':
     multiprocessing.freeze_support()
     oid = int(input())
 
-    connection = connectDB()
-    newsDB = connection["newsDB"]
+    newsDB, _ = connectDB()
     metadataCollection = newsDB['metadata']
     try:
         i = metadataCollection.find_one({"oid": oid})['last']
@@ -152,9 +160,14 @@ if __name__ == '__main__':
             pass
         pool.close()
         pool.join()
-        metadataCollection.delete_one({"oid": oid})
-        metadataCollection.insert_one({
-            "oid": oid,
-            "last": i + processNo * batch
-        })
+        while True:
+            try:
+                metadataCollection.delete_one({"oid": oid})
+                metadataCollection.insert_one({
+                    "oid": oid,
+                    "last": i + processNo * batch
+                })
+                break
+            except:
+                pass
         i += processNo * batch

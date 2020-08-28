@@ -83,7 +83,6 @@ def crawlNews(oid, aid):
         newsText = newsText.replace('\n', ' ')
         newsText = newsText.replace('  ', ' ')
         newsText = newsText.strip()
-        newsText = newsText.encode("utf-8").decode('utf-8')
 
         newsTitle = newsSoup.find(id="articleTitle").get_text().strip()
 

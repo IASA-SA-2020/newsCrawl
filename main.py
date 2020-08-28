@@ -8,8 +8,8 @@ from tqdm import tqdm
 
 sectionName = {'정치': 'politics', '경제': 'economy', '사회': 'society', '생활': 'live', '세계': 'world', 'IT': 'it',
                '오피니언': 'opinion'}
-processNo = 1
-batch = 1
+processNo = 8
+batch = 200
 host = 'localhost'
 
 

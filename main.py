@@ -1,61 +1,13 @@
-import json
-import pymongo
-import requests
-import datetime
 from bs4 import BeautifulSoup, NavigableString, Comment
 import multiprocessing
 from tqdm import tqdm
+from lib.common import getRaw, strToDate, connectDB
 
 sectionName = {'정치': 'politics', '경제': 'economy', '사회': 'society', '생활': 'live', '세계': 'world', 'IT': 'it',
                '오피니언': 'opinion'}
 processNo = 8
 batch = 200
 host = 'localhost'
-
-
-def connectDB():
-    while True:
-        try:
-            conn = pymongo.MongoClient(host, 27017)
-            newsDB = conn["newsDB"]
-            categoryDB = conn["newsCategory"]
-            return newsDB, categoryDB
-        except:
-            pass
-
-
-def getNewsURL(oid, aid):
-    return 'https://news.naver.com/main/read.nhn?oid=%03d&aid=%010d' % (oid, aid), \
-           'https://tts.news.naver.com/article/%03d/%010d/summary' % (oid, aid)
-
-
-def strToDate(dateStr):
-    if '오전' in dateStr:
-        return datetime.datetime(int(dateStr.split('.')[0]), int(dateStr.split('.')[1]), int(dateStr.split('.')[2]),
-                                 int(dateStr.split('.')[3].split(':')[0].split('오전')[1]),
-                                 int(dateStr.split('.')[3].split(':')[1]))
-    else:
-        return datetime.datetime(int(dateStr.split('.')[0]), int(dateStr.split('.')[1]), int(dateStr.split('.')[2]),
-                                 int(dateStr.split('.')[3].split(':')[0].split('오후')[1]) + 12,
-                                 int(dateStr.split('.')[3].split(':')[1]))
-
-
-def getRaw(oid, aid):
-    while True:
-        try:
-            newsURL, summaryURL = getNewsURL(oid, aid)
-            newsResponse = requests.get(newsURL)
-            newsResponseText = newsResponse.text.replace('<br />', '\n').replace('<br>', '\n')
-            summaryResponse = requests.get(summaryURL)
-        except:
-            continue
-        try:
-            summary = json.loads(summaryResponse.text)
-        except:
-            summary = None
-        if newsResponse.status_code != 200:
-            continue
-        return True, newsResponseText, summary
 
 
 def crawlNews(oid, aid):
@@ -139,7 +91,7 @@ def getNews(newsDB, categoryDB, oid, aid):
 
 def processOneNews(op):
     oid, i = op
-    newsDB, categoryDB = connectDB()
+    newsDB, categoryDB, _ = connectDB(host)
     getNews(newsDB, categoryDB, oid, i)
 
 
@@ -147,7 +99,7 @@ if __name__ == '__main__':
     multiprocessing.freeze_support()
     oid = int(input())
 
-    newsDB, _ = connectDB()
+    newsDB, _, __ = connectDB(host)
     metadataCollection = newsDB['metadata']
     try:
         i = metadataCollection.find_one({"oid": oid})['last']

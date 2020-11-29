@@ -4,9 +4,9 @@ from lib.common import connectDB, oidList, log, strToDate, sectionName
 import sys
 import time
 
-host = 'localhost'
-chunk = 500
-maxProcessNo = 16
+host = 'mongodb://user:iasa2020!@localhost'
+chunk = 1000
+maxProcessNo = 8
 
 
 def parseNews(oid, processNo, parsedNo, startTime):
@@ -46,7 +46,7 @@ def parseNews(oid, processNo, parsedNo, startTime):
                         newsText = newsText.replace('\n\n', '\n')
                         newsText = newsText.replace('\n', ' ')
                         newsText = newsText.replace('  ', ' ')
-                        newsText = newsText.strip()
+                        newsText = newsText.strip().decode('utf-8','ignore').encode("utf-8")
 
                         newsTitle = newsSoup.find(id="articleTitle").get_text().strip()
 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     log('Parser main process started.', time.time(), 0, 0)
     thrs = []
     cnt = 0
-    processNo = min(maxProcessNo, len(oidList))
+    processNo = len(oidList)
     parsedNo = multiprocessing.Value('i', 0)
     startTime = time.time()
     for i in oidList:

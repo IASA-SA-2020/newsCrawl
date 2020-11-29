@@ -3,9 +3,9 @@ from lib.common import connectDB, getRaw, log, oidList
 import sys
 import time
 
-host = 'localhost'
+host = 'mongodb://user:iasa2020!@localhost'
 chunk = 100
-maxProcessNo = 30
+maxProcessNo = 16
 
 
 def crawlNews(oid, processNo, pushedNo, startTime):
@@ -29,6 +29,7 @@ def crawlNews(oid, processNo, pushedNo, startTime):
                 tmpDB.append({
                     'body': newsResponseText,
                     'summary': summary,
+
                     'aid': i
                 })
                 cnt += 1
@@ -57,12 +58,10 @@ if __name__ == '__main__':
     print('Crawler main process started.')
     thrs = []
     cnt = 0
-    processNo = min(maxProcessNo, len(oidList))
+    processNo = len(oidList)
     pushedNo = multiprocessing.Value('i', 0)
     startTime = time.time()
     for i in oidList:
-        if cnt >= processNo:
-            break
         thr = multiprocessing.Process(target=crawlNews, args=(i, processNo, pushedNo, startTime))
         thrs.append(thr)
         thr.start()

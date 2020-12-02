@@ -7,9 +7,9 @@ import time
 
 sectionName = {'정치': 'politics', '경제': 'economy', '사회': 'society', '생활': 'live', '세계': 'world', 'IT': 'it',
                '오피니언': 'opinion'}
-oidList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 28, 32, 47, 52, 55, 56, 57,
+_oidList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 28, 32, 47, 52, 55, 56, 57,
            81, 88, 91, 96, 227, 437, 448]
-
+oidList=[81, 88, 57, 56, 55, 52, 5, 47, 448, 437, 32, 3]
 
 def connectDB(host):
     while True:
@@ -32,10 +32,13 @@ def getRaw(oid, aid):
     while True:
         try:
             newsURL, summaryURL = getNewsURL(oid, aid)
-            newsResponse = requests.get(newsURL)
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
+            newsResponse = requests.get(newsURL, headers = headers)
             newsResponseText = newsResponse.text.replace('<br />', '\n').replace('<br>', '\n')
-            summaryResponse = requests.get(summaryURL)
-        except:
+            summaryResponse = requests.get(summaryURL, headers = headers)
+        except Exception as e:
+            print(e)
             continue
         try:
             summary = json.loads(summaryResponse.text)

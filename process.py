@@ -4,9 +4,9 @@ from lib.common import connectDB, oidList, log, strToDate, sectionName
 import sys
 import time
 
-host = 'localhost'
+host = 'mongodb://user:eDltjgus2004!@192.168.35.153'
 chunk = 500
-maxProcessNo = 16
+maxProcessNo = 8
 
 
 def parseNews(oid, processNo, parsedNo, startTime):
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     log('Parser main process started.', time.time(), 0, 0)
     thrs = []
     cnt = 0
-    processNo = min(maxProcessNo, len(oidList))
+    processNo = len(oidList)
     parsedNo = multiprocessing.Value('i', 0)
     startTime = time.time()
     for i in oidList:

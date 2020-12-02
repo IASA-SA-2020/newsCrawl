@@ -46,7 +46,7 @@ def parseNews(oid, processNo, parsedNo, startTime):
                         newsText = newsText.replace('\n\n', '\n')
                         newsText = newsText.replace('\n', ' ')
                         newsText = newsText.replace('  ', ' ')
-                        newsText = newsText.strip()
+                        newsText = newsText.strip().decode('utf-8','ignore').encode("utf-8")
 
                         newsTitle = newsSoup.find(id="articleTitle").get_text().strip()
 

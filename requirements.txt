@@ -2,3 +2,4 @@ pymongo
 beautifulsoup4
 requests
 tqdm
+demjson

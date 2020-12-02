@@ -3,7 +3,7 @@ from lib.common import connectDB, getRaw, log, oidList
 import sys
 import time
 
-host = 'mongodb://user:eDltjgus2004!@192.168.35.153'
+host = 'mongodb://user:iasa2020!@localhost'
 chunk = 100
 maxProcessNo = 16
 

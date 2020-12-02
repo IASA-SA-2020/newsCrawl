@@ -5,8 +5,8 @@ from lib.common import getRaw, strToDate, connectDB
 
 sectionName = {'정치': 'politics', '경제': 'economy', '사회': 'society', '생활': 'live', '세계': 'world', 'IT': 'it',
                '오피니언': 'opinion'}
-processNo = 32
-batch = 1000
+processNo = 2
+batch = 10
 host = 'mongodb://user:iasa2020!@localhost'
 
 

@@ -29,6 +29,10 @@ def getNewsURL(oid, aid):
            'https://tts.news.naver.com/article/%03d/%010d/summary' % (oid, aid)
 
 
+def getSNUURL(page):
+    return 'http://factcheck.snu.ac.kr/v2/facts?page=%d' % (page)
+
+
 def getRaw(oid, aid):
     while True:
         try:
@@ -46,6 +50,19 @@ def getRaw(oid, aid):
         if newsResponse.status_code != 200:
             continue
         return True, newsResponseText, summary
+
+
+def getSNURaw(page):
+    while True:
+        try:
+            newsURL = getSNUURL(page)
+            headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
+            newsResponse = requests.get(newsURL, headers = headers)
+        except:
+            continue
+        if newsResponse.status_code != 200:
+            continue
+        return True, newsResponse.text
 
 
 def strToDate(dateStr):

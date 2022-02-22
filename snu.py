@@ -4,7 +4,7 @@ from lib.common import getSNURaw, connectDB
 import demjson
 import numpy as np
 
-host = 'mongodb://user:iasa2020!@localhost'
+host = 'mongodb://localhost'
 
 
 def crawlNews(page):

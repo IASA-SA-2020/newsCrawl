@@ -50,6 +50,8 @@ def crawlNews(oid, aid):
         else:
             editedTime = strToDate(newsSoup.find_all("span", {"class": "t11"})[0].get_text())
 
+        writter = newsSoup.find_all("div", {"class":"journalistcard_summary_inner"})
+
         return True, newsTitle, newsText, summaryText, category, publishTime, editedTime
 
     except:
